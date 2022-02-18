@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Список заданий</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
+<script>
+
+    function validate() {
+        if ($('#task').val() === '') {
+            alert("Введите задание");
+            return false;
+        }
+        return true;
+    }
+
+    function showAllTasks(showAll) {
+        $("#tasks").empty();
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/todo/tasks',
+            dataType: 'json'
+        }).done(function (data) {
+            let i = 1;
+            for (const task of data) {
+                if (showAll) {
+                    if (task.done) {
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" checked onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                    } else {
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                    }
+                    i++;
+                } else {
+                    if (task.done) {
+                        //nothing todo
+                    } else {
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                        i++;
+                    }
+                }
+            }
+        }).fail(function (err) {
+            alert(err);
+        });
+    }
+
+    function checkTaskDone(taskChecked, taskId) {
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/todo/update',
+            data: {taskForUpdate:taskId, checked:taskChecked},
+            dataType: 'json'
+        }).done(function (data) {
+        }).fail(function (err) {
+        });
+        const input = document.getElementById("showAll");
+        showAllTasks(input.checked);
+    }
+
+    $(document).ready(function () {
+        showAllTasks(false);
+    });
+</script>
+<body>
+<div class="container">
+    <div class="row">
+        <form action="tasks" method="post" onsubmit="return validate();">
+            <div class="form-group">
+                <label for="task">Добавить новое задание</label>
+                <input type="text" size="100" class="form-control" id="task" name="task" placeholder="Добавить новое задание">
+            </div>
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+    <br>
+    <br>
+    <div class="form-group">
+        <input type="checkbox" id="showAll" class="form-check-input" onchange="showAllTasks(this.checked)"> Показать всё
+    </div>
+    <div id="tasks">
+    </div>
+</div>
+</body>
+</html>

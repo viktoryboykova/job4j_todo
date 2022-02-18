@@ -4,4 +4,22 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>IndexServlet</servlet-name>
+    <servlet-class>ru.job4j.servlet.IndexServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>UpdateTaskServlet</servlet-name>
+    <servlet-class>ru.job4j.servlet.UpdateTaskServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>IndexServlet</servlet-name>
+    <url-pattern>/tasks</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UpdateTaskServlet</servlet-name>
+    <url-pattern>/update</url-pattern>
+  </servlet-mapping>
 </web-app>
