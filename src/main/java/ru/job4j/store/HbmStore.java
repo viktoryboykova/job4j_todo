@@ -9,6 +9,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.model.Item;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class HbmStore implements Store {
 
@@ -19,49 +20,47 @@ public class HbmStore implements Store {
 
     @Override
     public Item add(Item item) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.save(item);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return item;
+        return this.tx(
+                session -> {
+                    session.save(item);
+                    return item;
+                }
+        );
     }
 
     @Override
     public Item findById(int id) {
-        Item result = null;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            result = session.get(Item.class, id);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        }
-        return result;
+        return this.tx(
+                session -> session.get(Item.class, id)
+        );
     }
 
     @Override
     public List<Item> findAll() {
-        List result;
-        try (Session session = sf.openSession();) {
-            session.beginTransaction();
-            result = session.createQuery("from ru.job4j.model.Item").list();
-            session.getTransaction().commit();
-        }
-        return result;
+        return this.tx(
+                session -> session.createQuery("from ru.job4j.model.Item").list()
+        );
     }
 
     @Override
     public void update(int id, Item item) {
+        this.tx(
+                session -> {
+                    item.setId(id);
+                    session.update(item);
+                    return true;
+                }
+        );
+    }
+
+    private <T> T tx (final Function<Session, T> command) {
         try (Session session = sf.openSession()) {
             session.beginTransaction();
-            item.setId(id);
-            session.update(item);
+            T rsl = command.apply(session);
             session.getTransaction().commit();
+            return rsl;
         } catch (HibernateException e) {
-            e.printStackTrace();
+            throw e;
         }
     }
 }
