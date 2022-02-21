@@ -15,9 +15,14 @@ public class Item {
     private Timestamp created = Timestamp.valueOf(LocalDateTime.now());
     private boolean done;
 
-    public Item(String description, boolean done) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User creator;
+
+    public Item(String description, boolean done, User creator) {
         this.description = description;
         this.done = done;
+        this.creator = creator;
     }
 
     public Item() {
@@ -56,6 +61,14 @@ public class Item {
         this.done = done;
     }
 
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,6 +93,7 @@ public class Item {
                 ", description='" + description + '\'' +
                 ", created=" + created +
                 ", done=" + done +
+                ", creator=" + creator +
                 '}';
     }
 }

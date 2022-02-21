@@ -20,6 +20,7 @@
 </head>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" ></script>
 <script>
+    const userName = sessionStorage.getItem("userName");
 
     function validate() {
         if ($('#task').val() === '') {
@@ -40,16 +41,16 @@
             for (const task of data) {
                 if (showAll) {
                     if (task.done) {
-                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" checked onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" checked onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}. Автор: ${task.creator.name}</td></div>`);
                     } else {
-                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}. Автор: ${task.creator.name}</td></div>`);
                     }
                     i++;
                 } else {
                     if (task.done) {
                         //nothing todo
                     } else {
-                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}</td></div>`)
+                        $('#tasks').append(`<div class="form-group"><td><input type="checkbox" onchange="checkTaskDone(this.checked, ${task.id})" class="form-check-input">${i}. ${task.description}. Автор: ${task.creator.name}</td></div>`);
                         i++;
                     }
                 }
@@ -74,25 +75,40 @@
 
     $(document).ready(function () {
         showAllTasks(false);
+        $('#currentUser').append(`<a className="nav-link">Текущий пользователь: ${userName}</a>`)
+        document.getElementById("userName").value = userName;
     });
 </script>
 <body>
 <div class="container">
     <div class="row">
-        <form action="tasks" method="post" onsubmit="return validate();">
-            <div class="form-group">
-                <label for="task">Добавить новое задание</label>
-                <input type="text" size="100" class="form-control" id="task" name="task" placeholder="Добавить новое задание">
-            </div>
-            <button type="submit" class="btn btn-success">Добавить</button>
-        </form>
+        <ul class="nav">
+            <li class="nav-item" id="currentUser">
+                <a></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="auth.html">Выйти</a>
+            </li>
+        </ul>
     </div>
-    <br>
-    <br>
-    <div class="form-group">
-        <input type="checkbox" id="showAll" class="form-check-input" onchange="showAllTasks(this.checked)"> Показать всё
-    </div>
-    <div id="tasks">
+    <div class="container">
+        <div class="row">
+            <form action="tasks" method="post" onsubmit="return validate();">
+                <div class="form-group">
+                    <label for="task">Добавить новое задание</label>
+                    <input type="text" size="100" class="form-control" id="task" name="task" placeholder="Добавить новое задание">
+                </div>
+                <button type="submit" class="btn btn-success">Добавить</button>
+                <input type="hidden" id="userName" name="userName" value="">
+            </form>
+        </div>
+        <br>
+        <br>
+        <div class="form-group">
+            <input type="checkbox" id="showAll" class="form-check-input" onchange="showAllTasks(this.checked)"> Показать всё
+        </div>
+        <div id="tasks">
+        </div>
     </div>
 </div>
 </body>

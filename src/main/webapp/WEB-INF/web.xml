@@ -4,14 +4,32 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>ru.job4j.filter.AuthFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>IndexServlet</servlet-name>
     <servlet-class>ru.job4j.servlet.IndexServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
     <servlet-name>UpdateTaskServlet</servlet-name>
     <servlet-class>ru.job4j.servlet.UpdateTaskServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AuthServlet</servlet-name>
+    <servlet-class>ru.job4j.servlet.AuthServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet>
+    <servlet-name>RegServlet</servlet-name>
+    <servlet-class>ru.job4j.servlet.RegServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -21,5 +39,13 @@
   <servlet-mapping>
     <servlet-name>UpdateTaskServlet</servlet-name>
     <url-pattern>/update</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AuthServlet</servlet-name>
+    <url-pattern>/auth</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RegServlet</servlet-name>
+    <url-pattern>/reg</url-pattern>
   </servlet-mapping>
 </web-app>

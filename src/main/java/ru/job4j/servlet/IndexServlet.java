@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.job4j.model.Item;
 import ru.job4j.store.HbmStore;
+import ru.job4j.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class IndexServlet extends HttpServlet {
 
@@ -34,7 +36,9 @@ public class IndexServlet extends HttpServlet {
     protected  void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         String taskDescription = req.getParameter("task");
-        Item item = new Item(taskDescription, false);
+        String creator = req.getParameter("userName");
+        User userCreator = hbmStore.findUserByName(creator);
+        Item item = new Item(taskDescription, false, userCreator);
         hbmStore.add(item);
         resp.sendRedirect("http://localhost:8080/todo/index.html");
     }
