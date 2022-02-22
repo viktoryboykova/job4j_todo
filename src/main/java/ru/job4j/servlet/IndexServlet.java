@@ -37,9 +37,10 @@ public class IndexServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String taskDescription = req.getParameter("task");
         String creator = req.getParameter("userName");
+        String[] cIds = req.getParameterValues("cIds");
         User userCreator = hbmStore.findUserByName(creator);
         Item item = new Item(taskDescription, false, userCreator);
-        hbmStore.add(item);
+        hbmStore.add(item, cIds);
         resp.sendRedirect("http://localhost:8080/todo/index.html");
     }
 }

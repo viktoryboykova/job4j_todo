@@ -5,6 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.model.Category;
 import ru.job4j.model.Role;
 import ru.job4j.model.User;
 
@@ -16,11 +17,26 @@ public class HbmRun {
                 .configure().build();
         try {
             SessionFactory sf = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-            Role role = create(Role.of("ADMIN"), sf);
-            create(User.of("Petr Arsentev", role), sf);
-            for (User user : findAll(User.class, sf)) {
-                System.out.println(user.getName() + " " + user.getRole().getName());
-            }
+            Session session = sf.openSession();
+            session.beginTransaction();
+
+//            User one = User.of("Egor");
+//            session.save(one);
+//
+//            Role admin = Role.of("ADMIN");
+//            admin.addUser(session.load(User.class, 6));
+//
+//            session.save(admin);
+
+            Category cat = Category.of("Кот");
+            session.save(cat);
+            Category food = Category.of("Готовка");
+            session.save(food);
+            Category cleaning = Category.of("Уборка");
+            session.save(cleaning);
+
+            session.getTransaction().commit();
+            session.close();
         }  catch (Exception e) {
             e.printStackTrace();
         } finally {

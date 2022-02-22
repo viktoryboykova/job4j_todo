@@ -22,7 +22,7 @@ public class RegServlet extends HttpServlet {
             resp.sendRedirect("http://localhost:8080/todo/reg.html");
             return;
         }
-        User newUser = User.of(name, hbmStore.findRoleById(2));
+        User newUser = User.of(name);
         hbmStore.add(newUser);
         resp.sendRedirect("http://localhost:8080/todo/auth.html");
     }

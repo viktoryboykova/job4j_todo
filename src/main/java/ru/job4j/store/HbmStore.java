@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.model.Category;
 import ru.job4j.model.Item;
 import ru.job4j.model.Role;
 import ru.job4j.model.User;
@@ -21,11 +22,15 @@ public class HbmStore implements Store {
             .buildMetadata().buildSessionFactory();
 
     @Override
-    public Item add(Item item) {
+    public Item add(Item item, String[] ids) {
         return this.tx(
                 session -> {
-                    session.save(item);
-                    return item;
+                    for (String id : ids) {
+                        Category category = session.find(Category.class, Integer.parseInt(id));
+                        item.addCategory(category);
+                    }
+                        session.save(item);
+                        return item;
                 }
         );
     }
@@ -40,7 +45,17 @@ public class HbmStore implements Store {
     @Override
     public List<Item> findAll() {
         return this.tx(
-                session -> session.createQuery("from ru.job4j.model.Item").list()
+                session -> session.createQuery(
+                            "select distinct c from Item c join fetch c.categories"
+                    ).list()
+
+        );
+    }
+
+    @Override
+    public List<Category> findAllCategories() {
+        return this.tx(
+                session -> session.createQuery("from ru.job4j.model.Category").list()
         );
     }
 

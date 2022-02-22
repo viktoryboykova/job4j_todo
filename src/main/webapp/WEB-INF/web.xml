@@ -19,6 +19,10 @@
     <servlet-class>ru.job4j.servlet.IndexServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>CategoryServlet</servlet-name>
+    <servlet-class>ru.job4j.servlet.CategoryServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>UpdateTaskServlet</servlet-name>
     <servlet-class>ru.job4j.servlet.UpdateTaskServlet</servlet-class>
   </servlet>
@@ -35,6 +39,10 @@
   <servlet-mapping>
     <servlet-name>IndexServlet</servlet-name>
     <url-pattern>/tasks</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CategoryServlet</servlet-name>
+    <url-pattern>/categories</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UpdateTaskServlet</servlet-name>

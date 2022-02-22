@@ -1,26 +1,23 @@
 package ru.job4j.model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "j_role")
-public class Role {
+@Table(name = "categories")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users = new ArrayList<>();
-
-    public static Role of(String name) {
-        Role role = new Role();
-        role.name = name;
-        return role;
+    public static Category of(String name) {
+        Category category = new Category();
+        category.name = name;
+        return category;
     }
 
     public int getId() {
@@ -39,18 +36,6 @@ public class Role {
         this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public void addUser(User u) {
-        this.users.add(u);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,8 +44,8 @@ public class Role {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Role role = (Role) o;
-        return id == role.id;
+        Category category = (Category) o;
+        return id == category.id;
     }
 
     @Override

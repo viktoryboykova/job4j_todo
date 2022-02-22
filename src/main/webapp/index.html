@@ -56,7 +56,6 @@
                 }
             }
         }).fail(function (err) {
-            alert(err);
         });
     }
 
@@ -74,6 +73,19 @@
     }
 
     $(document).ready(function () {
+        $(document).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/todo/categories',
+                dataType: 'json'
+            }).done(function (data) {
+                for (const category of data) {
+                    $('#cIds').append(`<option value="${category.id}">${category.name}</option>`)
+                }
+            }).fail(function (err) {
+                alert(err);
+            });
+        });
         showAllTasks(false);
         $('#currentUser').append(`<a className="nav-link">Текущий пользователь: ${userName}</a>`)
         document.getElementById("userName").value = userName;
@@ -94,12 +106,26 @@
     <div class="container">
         <div class="row">
             <form action="tasks" method="post" onsubmit="return validate();">
-                <div class="form-group">
-                    <label for="task">Добавить новое задание</label>
-                    <input type="text" size="100" class="form-control" id="task" name="task" placeholder="Добавить новое задание">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-3" for="task" style="font-weight: 900">Добавить новое задание</label>
+                    <div class="col-sm-5">
+                        <input type="text" size="100" class="form-control" id="task" name="task" placeholder="Добавить новое задание">
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-success">Добавить</button>
-                <input type="hidden" id="userName" name="userName" value="">
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-3" for="cIds" style="font-weight: 900">Список категорий</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" name="cIds" id="cIds" multiple>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-sm-3" style="font-weight: 900"></label>
+                    <div class="col-sm-5">
+                        <button type="submit" class="btn btn-success">Добавить</button>
+                        <input type="hidden" id="userName" name="userName" value="">
+                    </div>
+                </div>
             </form>
         </div>
         <br>
