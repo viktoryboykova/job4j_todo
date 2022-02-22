@@ -2,6 +2,7 @@ package ru.job4j.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import ru.job4j.model.Category;
 import ru.job4j.model.Item;
 import ru.job4j.store.HbmStore;
 import ru.job4j.model.User;
@@ -37,10 +38,14 @@ public class IndexServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         String taskDescription = req.getParameter("task");
         String creator = req.getParameter("userName");
-        String[] cIds = req.getParameterValues("cIds");
         User userCreator = hbmStore.findUserByName(creator);
         Item item = new Item(taskDescription, false, userCreator);
-        hbmStore.add(item, cIds);
+        String[] cIds = req.getParameterValues("cIds");
+        for (String id : cIds) {
+            Category category = hbmStore.findCategoryById(Integer.parseInt(id));
+            item.addCategory(category);
+        }
+        hbmStore.add(item);
         resp.sendRedirect("http://localhost:8080/todo/index.html");
     }
 }

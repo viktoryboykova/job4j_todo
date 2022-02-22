@@ -8,8 +8,9 @@ import ru.job4j.model.User;
 import java.util.List;
 
 public interface Store {
-    Item add(Item item, String[] ids);
+    Item add(Item item);
     Item findById(int id);
+    Category findCategoryById(int id);
     void update(int id, Item item);
     List<Item> findAll();
     List<Category> findAllCategories();

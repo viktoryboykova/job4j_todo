@@ -27,6 +27,10 @@
             alert("Введите задание");
             return false;
         }
+        if ($('#cIds').val() === '') {
+            alert("Выберите категорию");
+            return false;
+        }
         return true;
     }
 
@@ -73,7 +77,6 @@
     }
 
     $(document).ready(function () {
-        $(document).ready(function () {
             $.ajax({
                 type: 'GET',
                 url: 'http://localhost:8080/todo/categories',
@@ -85,7 +88,6 @@
             }).fail(function (err) {
                 alert(err);
             });
-        });
         showAllTasks(false);
         $('#currentUser').append(`<a className="nav-link">Текущий пользователь: ${userName}</a>`)
         document.getElementById("userName").value = userName;

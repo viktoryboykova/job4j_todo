@@ -22,13 +22,9 @@ public class HbmStore implements Store {
             .buildMetadata().buildSessionFactory();
 
     @Override
-    public Item add(Item item, String[] ids) {
+    public Item add(Item item) {
         return this.tx(
                 session -> {
-                    for (String id : ids) {
-                        Category category = session.find(Category.class, Integer.parseInt(id));
-                        item.addCategory(category);
-                    }
                         session.save(item);
                         return item;
                 }
@@ -39,6 +35,13 @@ public class HbmStore implements Store {
     public Item findById(int id) {
         return this.tx(
                 session -> session.get(Item.class, id)
+        );
+    }
+
+    @Override
+    public Category findCategoryById(int id) {
+        return this.tx(
+                session -> session.get(Category.class, id)
         );
     }
 
