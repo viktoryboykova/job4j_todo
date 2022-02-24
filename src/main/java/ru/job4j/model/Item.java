@@ -1,7 +1,7 @@
 package ru.job4j.model;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,8 +14,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
-    private Timestamp created = Timestamp.valueOf(LocalDateTime.now());
     private boolean done;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -32,6 +34,7 @@ public class Item {
         this.description = description;
         this.done = done;
         this.creator = creator;
+        this.created = new Date(System.currentTimeMillis());
     }
 
     public Item() {
@@ -54,11 +57,11 @@ public class Item {
         this.description = description;
     }
 
-    public Timestamp getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
@@ -87,6 +90,17 @@ public class Item {
     }
 
     @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", done=" + done +
+                ", created=" + created +
+                ", creator=" + creator +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -103,14 +117,5 @@ public class Item {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", created=" + created +
-                ", done=" + done +
-                ", creator=" + creator +
-                '}';
-    }
+
 }
